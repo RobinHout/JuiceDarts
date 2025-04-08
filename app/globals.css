@@ -51,3 +51,14 @@ body {
     justify-content: center;
     padding-top: 100px;
 }
+.cellStyle {
+    border: 1px solid #ccc;
+    padding: 10px 20px 10px 20px;
+    text-align: center;
+}
+.tabel {
+    /* borderCollapse: "collapse", */
+    /* border-collapse: collapse; */
+    width: fit-content;
+    margin: 20px auto;
+}
