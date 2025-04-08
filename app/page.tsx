@@ -32,20 +32,19 @@ export default function Home() {
                 setOpties(User);
             }
         };
-        const fetchScores = async () => {
-            const { data: rondjeScore, error } = await supabase
-                .from("rondjeScore")
-                .select("*");
-            if (error) console.error(error);
-            else {
-                setScores(rondjeScore);
-                console.log("Hallo" + rondjeScore);
-            }
-        };
         fetchUsers();
         fetchScores();
     }, []);
-
+    const fetchScores = async () => {
+        const { data: rondjeScore, error } = await supabase
+            .from("rondjeScore")
+            .select("*");
+        if (error) console.error(error);
+        else {
+            setScores(rondjeScore);
+            console.log("Hallo" + rondjeScore);
+        }
+    };
     const uploadScore = async () => {
         const { error } = await supabase
             .from("rondjeScore")
@@ -58,6 +57,7 @@ export default function Home() {
         } else {
             setTwintig("");
             setTotaalScore("");
+            fetchScores();
         }
     };
 
