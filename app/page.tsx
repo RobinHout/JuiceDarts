@@ -47,7 +47,7 @@ export default function Home() {
     }, []);
 
     const uploadScore = async () => {
-        const { data, error } = await supabase
+        const { error } = await supabase
             .from("rondjeScore")
             .insert([
                 { userName: naam, eersteTwintig: twintig, totaal: totaalScore },
@@ -56,7 +56,8 @@ export default function Home() {
         if (error) {
             console.error("Fout bij uploaden:", error.message);
         } else {
-            console.log("Geüpload:", data);
+            setTwintig("");
+            setTotaalScore("");
         }
     };
 

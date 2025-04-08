@@ -50,6 +50,7 @@ body {
     display: flex;
     justify-content: center;
     padding-top: 100px;
+    flex-wrap: wrap;
 }
 .cellStyle {
     border: 1px solid #ccc;
