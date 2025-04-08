@@ -42,10 +42,11 @@ body {
     font-size: 1rem;
     outline: none;
     transition: border-color 0.2s ease;
+    color: gray;
     background-color: white;
 }
 .input::placeholder {
-    color: rgb(50, 50, 50);
+    color: gray;
 }
 .input:focus {
     border-color: #2563eb; /* darker blue on focus */
