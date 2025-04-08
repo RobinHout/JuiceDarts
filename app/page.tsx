@@ -16,7 +16,9 @@ type score = {
 };
 
 export default function Home() {
-    const [naam, setNaam] = useState("");
+    const [naam, setNaam] = useState("Robin");
+    const [twintig, setTwintig] = useState("");
+    const [totaalScore, setTotaalScore] = useState("");
     const [opties, setOpties] = useState<Gebruiker[]>([]);
     const [scores, setScores] = useState<score[]>([]);
 
@@ -44,8 +46,23 @@ export default function Home() {
         fetchScores();
     }, []);
 
+    const uploadScore = async () => {
+        const { data, error } = await supabase
+            .from("rondjeScore")
+            .insert([
+                { userName: naam, eersteTwintig: twintig, totaal: totaalScore },
+            ])
+            .select();
+        if (error) {
+            console.error("Fout bij uploaden:", error.message);
+        } else {
+            console.log("Geüpload:", data);
+        }
+    };
+
     const voerIn = () => {
         console.log("iets");
+        uploadScore();
     };
 
     return (
@@ -69,11 +86,15 @@ export default function Home() {
                     name="eerste20"
                     className="input"
                     placeholder="Eerste 20"
+                    value={twintig}
+                    onChange={(e) => setTwintig(e.target.value)}
                 ></input>
                 <input
                     name="totaal"
                     className="input"
                     placeholder="Totaal"
+                    value={totaalScore}
+                    onChange={(e) => setTotaalScore(e.target.value)}
                 ></input>
                 <button onClick={voerIn} className="input">
                     Submit
