@@ -44,6 +44,9 @@ body {
     transition: border-color 0.2s ease;
     background-color: white;
 }
+.input::placeholder {
+    color: rgb(50, 50, 50);
+}
 .input:focus {
     border-color: #2563eb; /* darker blue on focus */
     box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
