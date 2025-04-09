@@ -71,7 +71,10 @@ export default function Home() {
         <>
             {/* <div className="Titel">Kies een naam:</div> */}
             <div className="nieuwSpelButton">
-                <Link className="nieuwSpel" href="/Rondje">
+                <Link
+                    className="nieuwSpel"
+                    href={{ pathname: "/Rondje", query: { naam: naam } }}
+                >
                     Nieuw spel
                 </Link>
             </div>
