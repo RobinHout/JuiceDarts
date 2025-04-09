@@ -69,3 +69,16 @@ body {
     width: fit-content;
     margin: 20px auto;
 }
+.nieuwSpel {
+    /* background-color: green; */
+    border: 2px solid black;
+    padding: 5px;
+    border-radius: 20px;
+    /* width: 100 */
+}
+.nieuwSpelButton {
+    display: flex;
+    padding-top: 20px;
+    justify-content: center;
+    /* background-color: red; */
+}

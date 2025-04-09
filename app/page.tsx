@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import "./globals.css";
 import { supabase } from "./lib/supabaseClient";
+import Link from "next/link";
 
 type Gebruiker = {
     id: number;
@@ -69,6 +70,11 @@ export default function Home() {
     return (
         <>
             {/* <div className="Titel">Kies een naam:</div> */}
+            <div className="nieuwSpelButton">
+                <Link className="nieuwSpel" href="/Rondje">
+                    Nieuw spel
+                </Link>
+            </div>
             <div className="inputvelden">
                 <select
                     name="naam"
