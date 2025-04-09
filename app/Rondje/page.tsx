@@ -22,8 +22,8 @@ export default function Rondje({ naam }: Props) {
             setKlaar(true);
         }
         const nieuweBeurt = beurt + x;
-        if (nieuweBeurt >= 20 && !bull) {
-            setBeurt(20);
+        if (nieuweBeurt >= 21 && !bull) {
+            setBeurt(21);
             setBull(true);
             setTwint(nieuweBeurt);
         } else {
