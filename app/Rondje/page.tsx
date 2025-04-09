@@ -28,7 +28,7 @@ export default function Rondje() {
         if (nieuweBeurt >= 21 && !bull) {
             setBeurt(21);
             setBull(true);
-            setTwint(nieuweBeurt);
+            setTwint(gegooid);
         } else {
             setBeurt(beurt + x);
         }
@@ -37,7 +37,7 @@ export default function Rondje() {
     async function voerScoresIn() {
         const { error } = await supabase
             .from("rondjeScore")
-            .insert([{ userName: naam, eersteTwintig: twint, totaal: beurt }])
+            .insert([{ userName: naam, eersteTwintig: twint, totaal: gegooid }])
             .select();
         if (error) {
             console.error("Fout bij uploaden:", error.message);
