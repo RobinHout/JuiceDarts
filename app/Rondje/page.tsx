@@ -28,7 +28,7 @@ export default function Rondje() {
         if (nieuweBeurt >= 21 && !bull) {
             setBeurt(21);
             setBull(true);
-            setTwint(gegooid);
+            setTwint(gegooid + 1);
         } else {
             setBeurt(beurt + x);
         }
