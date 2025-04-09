@@ -1,20 +1,35 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabaseClient";
-import { useSearchParams } from "next/navigation";
 // type Props = {
 //     naam: string;
 // };
+type Gebruiker = {
+    id: number;
+    name: string;
+};
 export default function Rondje() {
     const [gegooid, setGegooid] = useState(0);
     const [twint, setTwint] = useState(0);
     const [beurt, setBeurt] = useState(1);
     const [klaar, setKlaar] = useState(false);
-    const [bull, setBull] = useState(false);
-    const searchParams = useSearchParams();
-    const naam = searchParams.get("naam") || "Speler";
+    const [opties, setOpties] = useState<Gebruiker[]>([]);
 
+    const [bull, setBull] = useState(false);
+    const [naam, setNaam] = useState("");
+    useEffect(() => {
+        const fetchUsers = async () => {
+            const { data: User, error } = await supabase
+                .from("User")
+                .select("*");
+            if (error) console.error(error);
+            else {
+                setOpties(User);
+            }
+        };
+        fetchUsers();
+    }, []);
     function Gemist() {
         setGegooid(gegooid + 1);
     }
@@ -46,7 +61,7 @@ export default function Rondje() {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
             <h1 className="text-3xl font-bold mb-6 text-gray-800">
-                Dart Rondje van {naam}
+                Dart Rondje
             </h1>
 
             <div className="flex gap-10 mb-6 text-center">
@@ -70,6 +85,19 @@ export default function Rondje() {
                     <div className="text-lg font-semibold text-green-700">
                         🎯 Je bent klaar!
                     </div>
+                    <select
+                        name="naam"
+                        value={naam}
+                        onChange={(e) => setNaam(e.target.value)}
+                        className="dropdown"
+                    >
+                        {/* <option value="">Naam</option> */}
+                        {opties.map((optie) => (
+                            <option key={optie.name} value={optie.name}>
+                                {optie.name}
+                            </option>
+                        ))}
+                    </select>
                     <Link
                         href="/"
                         onClick={voerScoresIn}
