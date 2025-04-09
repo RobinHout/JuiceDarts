@@ -18,6 +18,7 @@ export default function Rondje() {
     const [opties, setOpties] = useState<Gebruiker[]>([]);
 
     const [bull, setBull] = useState(false);
+    const [max, setMax] = useState(false);
     const [naam, setNaam] = useState("Robin");
     const router = useRouter();
     useEffect(() => {
@@ -42,12 +43,17 @@ export default function Rondje() {
             setKlaar(true);
         }
         const nieuweBeurt = beurt + x;
-        if (nieuweBeurt >= 21 && !bull) {
-            setBeurt(21);
-            setBull(true);
-            setTwint(gegooid + 1);
+        if (nieuweBeurt >= 20 && !max) {
+            setBeurt(20);
+            setMax(true);
         } else {
-            setBeurt(beurt + x);
+            if (nieuweBeurt >= 21 && !bull) {
+                setBeurt(21);
+                setBull(true);
+                setTwint(gegooid + 1);
+            } else {
+                setBeurt(beurt + x);
+            }
         }
     }
 
