@@ -2,15 +2,18 @@
 import Link from "next/link";
 import { useState } from "react";
 import { supabase } from "../lib/supabaseClient";
-type Props = {
-    naam: string;
-};
-export default function Rondje({ naam }: Props) {
+import { useSearchParams } from "next/navigation";
+// type Props = {
+//     naam: string;
+// };
+export default function Rondje() {
     const [gegooid, setGegooid] = useState(0);
     const [twint, setTwint] = useState(0);
     const [beurt, setBeurt] = useState(1);
     const [klaar, setKlaar] = useState(false);
     const [bull, setBull] = useState(false);
+    const searchParams = useSearchParams();
+    const naam = searchParams.get("naam") || "Speler";
 
     function Gemist() {
         setGegooid(gegooid + 1);
