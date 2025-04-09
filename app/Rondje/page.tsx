@@ -1,5 +1,6 @@
 "use client";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+// import Link from "next/link";
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabaseClient";
 // type Props = {
@@ -17,7 +18,8 @@ export default function Rondje() {
     const [opties, setOpties] = useState<Gebruiker[]>([]);
 
     const [bull, setBull] = useState(false);
-    const [naam, setNaam] = useState("");
+    const [naam, setNaam] = useState("Robin");
+    const router = useRouter();
     useEffect(() => {
         const fetchUsers = async () => {
             const { data: User, error } = await supabase
@@ -56,6 +58,8 @@ export default function Rondje() {
             .select();
         if (error) {
             console.error("Fout bij uploaden:", error.message);
+        } else {
+            router.push("/");
         }
     }
     return (
@@ -98,13 +102,13 @@ export default function Rondje() {
                             </option>
                         ))}
                     </select>
-                    <Link
-                        href="/"
+                    <button
+                        // href="/"
                         onClick={voerScoresIn}
                         className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-xl shadow transition"
                     >
                         Terug naar home
-                    </Link>
+                    </button>
                 </div>
             )}
             <div className="grid grid-cols-2 gap-4">
