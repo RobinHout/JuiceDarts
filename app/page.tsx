@@ -70,13 +70,23 @@ export default function Home() {
                     ))
                 )}
             </div>
-            <div className="flex justify-center mt-6">
-                <Link
-                    href={{ pathname: "/Rondje" }}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-2xl shadow-md transition duration-200"
-                >
-                    Nieuw spel
-                </Link>
+            <div className="flex justify-center ">
+                <div className="flex justify-center mt-6 mr-5">
+                    <Link
+                        href={{ pathname: "/Rondje" }}
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-2xl shadow-md transition duration-200"
+                    >
+                        Nieuw spel
+                    </Link>
+                </div>
+                <div className="flex justify-center mt-6">
+                    <Link
+                        href={{ pathname: "/Statistieken" }}
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-2xl shadow-md transition duration-200"
+                    >
+                        Statistieken
+                    </Link>
+                </div>
             </div>
             <table className="tabel">
                 <thead>
