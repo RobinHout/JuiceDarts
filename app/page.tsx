@@ -4,10 +4,6 @@ import "./globals.css";
 import { supabase } from "./lib/supabaseClient";
 import Link from "next/link";
 
-type Gebruiker = {
-    id: number;
-    name: string;
-};
 type score = {
     Id: number;
     userName: string;
@@ -15,25 +11,22 @@ type score = {
     totaal: number;
     // datum: number;
 };
-
+type honderdtachtig = {
+    positie: number;
+    userName: string;
+    aantal: number;
+};
+const honderdtachtigs: honderdtachtig[] = [
+    { positie: 1, userName: "Jack", aantal: 3 },
+    { positie: 2, userName: "Sjoerd", aantal: 1 },
+    { positie: 2, userName: "Siebe", aantal: 1 },
+    { positie: 2, userName: "Robin", aantal: 1 },
+    { positie: 2, userName: "Koos", aantal: 1 },
+];
 export default function Home() {
-    const [naam, setNaam] = useState("Robin");
-    const [twintig, setTwintig] = useState("");
-    const [totaalScore, setTotaalScore] = useState("");
-    const [opties, setOpties] = useState<Gebruiker[]>([]);
     const [scores, setScores] = useState<score[]>([]);
 
     useEffect(() => {
-        const fetchUsers = async () => {
-            const { data: User, error } = await supabase
-                .from("User")
-                .select("*");
-            if (error) console.error(error);
-            else {
-                setOpties(User);
-            }
-        };
-        fetchUsers();
         fetchScores();
     }, []);
 
@@ -44,72 +37,46 @@ export default function Home() {
         if (error) console.error(error);
         else {
             setScores(rondjeScore);
-            // console.log("Hallo" + rondjeScore);
         }
-    };
-    const uploadScore = async () => {
-        const { error } = await supabase
-            .from("rondjeScore")
-            .insert([
-                { userName: naam, eersteTwintig: twintig, totaal: totaalScore },
-            ])
-            .select();
-        if (error) {
-            console.error("Fout bij uploaden:", error.message);
-        } else {
-            setTwintig("");
-            setTotaalScore("");
-            fetchScores();
-        }
-    };
-
-    const voerIn = () => {
-        console.log("iets");
-        uploadScore();
     };
 
     return (
         <>
-            {/* <div className="Titel">Kies een naam:</div> */}
-            <div className="nieuwSpelButton">
+            <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
+                <h2 className="text-2xl font-bold text-center mb-3 text-gray-800">
+                    🏆 180 Counter 🏆
+                </h2>
+
+                <div className="grid grid-cols-2 px-3 py-1 text-xs font-semibold text-gray-600 border-b">
+                    <span>Naam</span>
+                    <span className="text-right">Aantal</span>
+                </div>
+
+                {honderdtachtigs.length === 0 ? (
+                    <p className="text-center text-gray-400 py-3 text-sm">
+                        Nog geen scores...
+                    </p>
+                ) : (
+                    honderdtachtigs.map((item, index) => (
+                        <div
+                            key={index}
+                            className="grid grid-cols-2 px-2 py-1.5 text-sm text-gray-800 border-b hover:bg-gray-50 transition"
+                        >
+                            <span>{item.userName}</span>
+                            <span className="text-right font-medium">
+                                {item.aantal}
+                            </span>
+                        </div>
+                    ))
+                )}
+            </div>
+            <div className="flex justify-center mt-6">
                 <Link
-                    className="nieuwSpel"
-                    href={{ pathname: "/Rondje", query: { naam: naam } }}
+                    href={{ pathname: "/Rondje" }}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-2xl shadow-md transition duration-200"
                 >
                     Nieuw spel
                 </Link>
-            </div>
-            <div className="inputvelden">
-                <select
-                    name="naam"
-                    value={naam}
-                    onChange={(e) => setNaam(e.target.value)}
-                    className="dropdown"
-                >
-                    {/* <option value="">Naam</option> */}
-                    {opties.map((optie) => (
-                        <option key={optie.name} value={optie.name}>
-                            {optie.name}
-                        </option>
-                    ))}
-                </select>
-                <input
-                    name="eerste20"
-                    className="input"
-                    placeholder="Eerste 20"
-                    value={twintig}
-                    onChange={(e) => setTwintig(e.target.value)}
-                ></input>
-                <input
-                    name="totaal"
-                    className="input"
-                    placeholder="Totaal"
-                    value={totaalScore}
-                    onChange={(e) => setTotaalScore(e.target.value)}
-                ></input>
-                <button onClick={voerIn} className="input">
-                    Submit
-                </button>
             </div>
             <table className="tabel">
                 <thead>
