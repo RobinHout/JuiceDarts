@@ -9,11 +9,11 @@ type Gebruiker = {
     name: string;
 };
 type score = {
-    id: number;
+    Id: number;
     userName: string;
     eersteTwintig: number;
     totaal: number;
-    datum: number;
+    // datum: number;
 };
 
 export default function Home() {
@@ -36,14 +36,15 @@ export default function Home() {
         fetchUsers();
         fetchScores();
     }, []);
+
     const fetchScores = async () => {
         const { data: rondjeScore, error } = await supabase
-            .from("rondjeScore")
-            .select("*");
+            .from("rondjeUitgebreid")
+            .select("Id, userName, eersteTwintig, totaal");
         if (error) console.error(error);
         else {
             setScores(rondjeScore);
-            console.log("Hallo" + rondjeScore);
+            // console.log("Hallo" + rondjeScore);
         }
     };
     const uploadScore = async () => {
@@ -120,7 +121,7 @@ export default function Home() {
                 </thead>
                 <tbody>
                     {scores.map((score) => (
-                        <tr key={score.id}>
+                        <tr key={score.Id}>
                             <td className="cellStyle">{score.userName}</td>
                             <td className="cellStyle">{score.eersteTwintig}</td>
                             <td className="cellStyle">{score.totaal}</td>
