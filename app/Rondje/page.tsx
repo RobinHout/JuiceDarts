@@ -142,7 +142,6 @@ export default function Rondje() {
                         onChange={(e) => setNaam(e.target.value)}
                         className="dropdown"
                     >
-                        {/* <option value="">Naam</option> */}
                         {opties.map((optie) => (
                             <option key={optie.name} value={optie.name}>
                                 {optie.name}
@@ -158,36 +157,55 @@ export default function Rondje() {
                     </button>
                 </div>
             )}
-            <div className="grid grid-cols-2 gap-4">
-                <button
-                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-xl shadow"
-                    onClick={Gemist}
-                    disabled={klaar}
-                >
-                    Gemist
-                </button>
-                <button
-                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-xl shadow"
-                    onClick={() => Geraakt(1)}
-                    disabled={klaar}
-                >
-                    {beurt} geraakt
-                </button>
-                <button
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-xl shadow"
-                    onClick={() => Geraakt(2)}
-                    disabled={klaar}
-                >
-                    Dubbel {beurt} geraakt
-                </button>
-                <button
-                    className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-xl shadow"
-                    onClick={() => Geraakt(3)}
-                    disabled={klaar}
-                >
-                    Triple {beurt} geraakt
-                </button>
-            </div>
+            {bull ? (
+                <div className="grid grid-cols-2 gap-4">
+                    <button
+                        className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-xl shadow"
+                        onClick={Gemist}
+                        disabled={klaar}
+                    >
+                        Gemist
+                    </button>
+                    <button
+                        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-xl shadow"
+                        onClick={() => Geraakt(1)}
+                        disabled={klaar}
+                    >
+                        Bull geraakt
+                    </button>
+                </div>
+            ) : (
+                <div className="grid grid-cols-2 gap-4">
+                    <button
+                        className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-xl shadow"
+                        onClick={Gemist}
+                        disabled={klaar}
+                    >
+                        Gemist
+                    </button>
+                    <button
+                        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-xl shadow"
+                        onClick={() => Geraakt(1)}
+                        disabled={klaar}
+                    >
+                        {beurt} geraakt
+                    </button>
+                    <button
+                        className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-xl shadow"
+                        onClick={() => Geraakt(2)}
+                        disabled={klaar}
+                    >
+                        Dubbel {beurt} geraakt
+                    </button>
+                    <button
+                        className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-xl shadow"
+                        onClick={() => Geraakt(3)}
+                        disabled={klaar}
+                    >
+                        Triple {beurt} geraakt
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
