@@ -3,19 +3,17 @@ import { useRouter } from "next/navigation";
 // import Link from "next/link";
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabaseClient";
+import { User } from "../types/types";
 // type Props = {
 //     naam: string;
 // };
-type Gebruiker = {
-    id: number;
-    name: string;
-};
+
 export default function Rondje() {
     const [gegooid, setGegooid] = useState(0);
     // const [twint, setTwint] = useState(0);
     const [beurt, setBeurt] = useState(1);
     const [klaar, setKlaar] = useState(false);
-    const [opties, setOpties] = useState<Gebruiker[]>([]);
+    const [opties, setOpties] = useState<User[]>([]);
     const [scores, setScores] = useState<number[]>([]);
     const [counter, setCounter] = useState(0);
     const [bull, setBull] = useState(false);
@@ -24,17 +22,15 @@ export default function Rondje() {
     const router = useRouter();
 
     useEffect(() => {
-        const fetchUsers = async () => {
-            const { data: User, error } = await supabase
-                .from("User")
-                .select("*");
-            if (error) console.error(error);
-            else {
-                setOpties(User);
-            }
-        };
         fetchUsers();
     }, []);
+    const fetchUsers = async () => {
+        fetch(
+            "https://juicedartsbackend-production.up.railway.app/User/alleUsers"
+        )
+            .then((res) => res.json())
+            .then((data) => setOpties(data));
+    };
     function Gemist() {
         setGegooid(gegooid + 1);
         setCounter(counter + 1);
@@ -52,6 +48,7 @@ export default function Rondje() {
         } else {
             const nieuweBeurt = beurt + x;
             if (nieuweBeurt >= 20 && !max) {
+                // const hoeveel = scores.length -
                 setScores((y) => [...y, nieuwGegooid]);
                 setBeurt(20);
                 setMax(true);
@@ -110,6 +107,23 @@ export default function Rondje() {
             router.push("/");
         }
     }
+    // async function voerScoresInNieuw() {
+    //     const { error } = await supabase
+    //         .from("rondjeUitgebreid")
+    //         .insert([
+    //             {
+    //                 userName: naam,
+    //                 totaal: gegooid,
+    //                 eersteTwintig: scores,
+    //             },
+    //         ])
+    //         .select();
+    //     if (error) {
+    //         console.error("Fout bij uploaden:", error.message);
+    //     } else {
+    //         router.push("/");
+    //     }
+    // }
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
@@ -143,8 +157,8 @@ export default function Rondje() {
                         className="dropdown"
                     >
                         {opties.map((optie) => (
-                            <option key={optie.name} value={optie.name}>
-                                {optie.name}
+                            <option key={optie.userName} value={optie.userName}>
+                                {optie.userName}
                             </option>
                         ))}
                     </select>
