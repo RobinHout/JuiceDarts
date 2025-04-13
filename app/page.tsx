@@ -1,16 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import "./globals.css";
-import { supabase } from "./lib/supabaseClient";
 import Link from "next/link";
+import { rondjeScore } from "./types/types";
 
-type score = {
-    Id: number;
-    userName: string;
-    eersteTwintig: number;
-    totaal: number;
-    // datum: number;
-};
 type honderdtachtig = {
     positie: number;
     userName: string;
@@ -24,20 +17,18 @@ const honderdtachtigs: honderdtachtig[] = [
     { positie: 2, userName: "Koos", aantal: 1 },
 ];
 export default function Home() {
-    const [scores, setScores] = useState<score[]>([]);
+    const [scores, setScores] = useState<rondjeScore[]>([]);
 
     useEffect(() => {
-        fetchScores();
+        fetchScoresNieuw();
     }, []);
 
-    const fetchScores = async () => {
-        const { data: rondjeScore, error } = await supabase
-            .from("rondjeUitgebreid")
-            .select("Id, userName, eersteTwintig, totaal");
-        if (error) console.error(error);
-        else {
-            setScores(rondjeScore);
-        }
+    const fetchScoresNieuw = async () => {
+        fetch(
+            "https://juicedartsbackend-production.up.railway.app/Rondje/alleRondjes"
+        )
+            .then((res) => res.json())
+            .then((data) => setScores(data));
     };
 
     return (
