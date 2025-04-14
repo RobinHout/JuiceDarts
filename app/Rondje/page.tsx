@@ -72,7 +72,7 @@ export default function Rondje() {
 
     const voerScoresInNieuw = async () => {
         const response = await fetch(
-            `https://juicedartsbackend-production.up.railway.app/Rondje/nieuwRondje?id=12&name=${naam}`,
+            `https://juicedartsbackend-production.up.railway.app/Rondje/nieuwRondje?name=${naam}`,
             // `https://juicedartsbackend-production.up.railway.app/Rondje/nieuwRondje?id=${3}&name=${naam}`,
             {
                 method: "POST",
