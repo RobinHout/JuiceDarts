@@ -73,7 +73,6 @@ export default function Rondje() {
     const voerScoresInNieuw = async () => {
         const response = await fetch(
             `https://juicedartsbackend-production.up.railway.app/Rondje/nieuwRondje?name=${naam}`,
-            // `https://juicedartsbackend-production.up.railway.app/Rondje/nieuwRondje?id=${3}&name=${naam}`,
             {
                 method: "POST",
                 headers: {
@@ -84,7 +83,6 @@ export default function Rondje() {
         );
         if (response.ok) {
             console.log("Scores succesvol opgeslagen!");
-            console.log(scores);
             router.push("/");
         } else {
             console.error("Fout bij opslaan van scores:", response.statusText);
