@@ -35,19 +35,27 @@ export default function Rondje() {
         }
     }
     async function submitID() {
-        const response = await fetch(
-            `http://localhost:5207/Rondje/verwijderRondje?id=${id}`,
-            {
-                method: "DELETE",
-                headers: {
-                    accept: "*",
-                },
+        try {
+            const response = await fetch(
+                `http://localhost:5207/Rondje/verwijderRondje?id=${id}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        Accept: "application/json",
+                    },
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status}`);
             }
-        );
-        if (response.ok) {
-            setMessage(naam + " is de naam die je hebt ingevoerd.");
-        } else {
-            console.error("Fout bij opslaan van de naam:", response.statusText);
+
+            const result = await response.text();
+            console.log("Deleted successfully:", result);
+            alert("Rondje is succesvol verwijderd!");
+        } catch (error) {
+            console.error("Error while deleting rondje:", error);
+            alert("Er is iets misgegaan bij het verwijderen.");
         }
     }
     const fetchScoresNieuw = async () => {
