@@ -89,7 +89,7 @@ export default function Home() {
                 </thead>
                 <tbody>
                     {scores.map((score) => (
-                        <tr key={score.Id}>
+                        <tr key={score.gameId}>
                             <td className="cellStyle">{score.userName}</td>
                             <td className="cellStyle">{score.eersteTwintig}</td>
                             <td className="cellStyle">{score.totaal}</td>

@@ -3,7 +3,7 @@ export type User = {
     userName: string;
 };
 export type rondjeScore = {
-    Id: number;
+    gameId: number;
     userName: string;
     eersteTwintig: number;
     totaal: number;
