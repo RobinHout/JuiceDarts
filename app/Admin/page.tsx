@@ -1,12 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import { rondjeScore } from "../types/types";
+import { User } from "../types/types";
 
 export default function Rondje() {
     const [naam, setNaam] = useState("");
     const [id, setId] = useState(0);
     const [message, setMessage] = useState("");
     const [scores, setScores] = useState<rondjeScore[]>([]);
+    const [opties, setOpties] = useState<User[]>([]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNaam(e.target.value);
@@ -16,7 +18,16 @@ export default function Rondje() {
     };
     useEffect(() => {
         fetchScoresNieuw();
+        fetchUsers();
     }, []);
+
+    const fetchUsers = async () => {
+        fetch(
+            "https://juicedartsbackend-production.up.railway.app/User/alleUsers"
+        )
+            .then((res) => res.json())
+            .then((data) => setOpties(data));
+    };
 
     async function submit() {
         const response = await fetch(
@@ -71,7 +82,7 @@ export default function Rondje() {
 
     return (
         <div className="flex justify-around">
-            <div className="p-4 background-gray-100 rounded-md shadow-md ml-5 mt-10 w-100">
+            <div className="p-4 bg-gray-100 rounded-md h-50 shadow-md ml-5 mt-10 w-100">
                 <label
                     htmlFor="name"
                     className="block text-sm font-medium text-gray-700 mb-1"
@@ -96,8 +107,13 @@ export default function Rondje() {
                     Submit
                 </button>
                 <p>{message}</p>
+                {opties.map((optie) => (
+                    <option key={optie.userName} value={optie.userName}>
+                        {optie.userName}
+                    </option>
+                ))}
             </div>
-            <div className="p-4 background-gray-100 rounded-md shadow-md max-w-sm ml-5 mt-10 w-100">
+            <div className="p-4 rounded-md bg-gray-100 h-50 shadow-md max-w-sm ml-5 mt-10 w-100">
                 <label
                     htmlFor="name"
                     className="block text-sm font-medium text-gray-700 mb-1"
@@ -121,7 +137,7 @@ export default function Rondje() {
                 >
                     Submit
                 </button>
-                <p>{message}</p>
+                <p className="bg-amber-400">{message}</p>
             </div>
             <div className="">
                 <table className="tabel">
