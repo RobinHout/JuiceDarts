@@ -36,11 +36,11 @@ export default function Rondje() {
     }
     async function submitID() {
         const response = await fetch(
-            `https://juicedartsbackend-production.up.railway.app/User/nieuwUser?name=${naam}`,
+            `http://localhost:5207/Rondje/verwijderRondje?id=${id}`,
             {
-                method: "POST",
+                method: "DELETE",
                 headers: {
-                    "Content-Type": "application/json",
+                    accept: "*",
                 },
             }
         );
