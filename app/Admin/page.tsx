@@ -37,7 +37,7 @@ export default function Rondje() {
     async function submitID() {
         try {
             const response = await fetch(
-                `http://localhost:5207/Rondje/verwijderRondje?id=${id}`,
+                `https://juicedartsbackend-production.up.railway.app/Rondje/verwijderRondje?id=${id}`,
                 {
                     method: "DELETE",
                     headers: {
