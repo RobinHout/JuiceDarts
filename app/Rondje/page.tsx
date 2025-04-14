@@ -1,16 +1,10 @@
 "use client";
 import { useRouter } from "next/navigation";
-// import Link from "next/link";
 import { useState, useEffect } from "react";
-import { supabase } from "../lib/supabaseClient";
 import { User } from "../types/types";
-// type Props = {
-//     naam: string;
-// };
 
 export default function Rondje() {
     const [gegooid, setGegooid] = useState(0);
-    // const [twint, setTwint] = useState(0);
     const [beurt, setBeurt] = useState(1);
     const [klaar, setKlaar] = useState(false);
     const [opties, setOpties] = useState<User[]>([]);
@@ -33,35 +27,42 @@ export default function Rondje() {
     };
     function Gemist() {
         setGegooid(gegooid + 1);
-        setCounter(counter + 1);
-        console.log(counter);
     }
 
     async function Geraakt(x: number) {
         const nieuwGegooid = gegooid + 1;
         setGegooid(nieuwGegooid);
-        console.log(nieuwGegooid);
 
         if (bull) {
-            setScores((y) => [...y, nieuwGegooid]);
+            const x = nieuwGegooid - counter;
+            setScores((y) => [...y, x]);
+            setCounter(nieuwGegooid);
             setKlaar(true);
         } else {
             const nieuweBeurt = beurt + x;
             if (nieuweBeurt >= 20 && !max) {
-                // const hoeveel = scores.length -
-                setScores((y) => [...y, nieuwGegooid]);
+                const x = nieuwGegooid - counter;
+                setScores((y) => [...y, x]);
+                setCounter(nieuwGegooid);
                 setBeurt(20);
                 setMax(true);
             } else {
                 if (nieuweBeurt >= 21 && !bull) {
-                    setScores((y) => [...y, nieuwGegooid]);
+                    const x = nieuwGegooid - counter;
+                    setScores((y) => [...y, x]);
+                    setCounter(nieuwGegooid);
                     setBeurt(21);
                     setBull(true);
                 } else {
-                    for (let i = 0; i < x; i++) {
-                        if (beurt + i < 20) {
-                            setScores((y) => [...y, nieuwGegooid]);
-                        }
+                    const z = nieuwGegooid - counter;
+                    setScores((y) => [...y, z]);
+                    setCounter(nieuwGegooid);
+                    if (x >= 2 && beurt + 1 < 20) {
+                        setScores((y) => [...y, 0]);
+                        setCounter(nieuwGegooid);
+                    }
+                    if (x === 3) {
+                        setScores((y) => [...y, 0]);
                     }
                     setBeurt(beurt + x);
                 }
@@ -69,62 +70,26 @@ export default function Rondje() {
         }
     }
 
-    async function voerScoresIn() {
-        const { error } = await supabase
-            .from("rondjeUitgebreid")
-            .insert([
-                {
-                    userName: naam,
-                    totaal: gegooid,
-                    eersteTwintig: gegooid - (scores[20] - scores[19]),
-                    1: scores[0],
-                    2: scores[1] - scores[0],
-                    3: scores[2] - scores[1],
-                    4: scores[3] - scores[2],
-                    5: scores[4] - scores[3],
-                    6: scores[5] - scores[4],
-                    7: scores[6] - scores[5],
-                    8: scores[7] - scores[6],
-                    9: scores[8] - scores[7],
-                    10: scores[9] - scores[8],
-                    11: scores[10] - scores[9],
-                    12: scores[11] - scores[10],
-                    13: scores[12] - scores[11],
-                    14: scores[13] - scores[12],
-                    15: scores[14] - scores[13],
-                    16: scores[15] - scores[14],
-                    17: scores[16] - scores[15],
-                    18: scores[17] - scores[16],
-                    19: scores[18] - scores[17],
-                    20: scores[19] - scores[18],
-                    bull: scores[20] - scores[19],
+    const voerScoresInNieuw = async () => {
+        const response = await fetch(
+            `https://juicedartsbackend-production.up.railway.app/Rondje/nieuwRondje?id=12&name=${naam}`,
+            // `https://juicedartsbackend-production.up.railway.app/Rondje/nieuwRondje?id=${3}&name=${naam}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
                 },
-            ])
-            .select();
-        if (error) {
-            console.error("Fout bij uploaden:", error.message);
-        } else {
+                body: JSON.stringify(scores),
+            }
+        );
+        if (response.ok) {
+            console.log("Scores succesvol opgeslagen!");
+            console.log(scores);
             router.push("/");
+        } else {
+            console.error("Fout bij opslaan van scores:", response.statusText);
         }
-    }
-    // async function voerScoresInNieuw() {
-    //     const { error } = await supabase
-    //         .from("rondjeUitgebreid")
-    //         .insert([
-    //             {
-    //                 userName: naam,
-    //                 totaal: gegooid,
-    //                 eersteTwintig: scores,
-    //             },
-    //         ])
-    //         .select();
-    //     if (error) {
-    //         console.error("Fout bij uploaden:", error.message);
-    //     } else {
-    //         router.push("/");
-    //     }
-    // }
-
+    };
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
             <h1 className="text-3xl font-bold mb-6 text-gray-800">
@@ -133,7 +98,9 @@ export default function Rondje() {
 
             <div className="flex gap-10 mb-6 text-center">
                 <div className="bg-white rounded-xl shadow-md p-6">
-                    <div className="text-sm text-gray-500 mb-2">Worp:</div>
+                    <div className="text-sm text-gray-500 mb-2">
+                        Gegooide pijlen:
+                    </div>
                     <div className="text-2xl font-semibold text-blue-600">
                         {gegooid}
                     </div>
@@ -163,8 +130,7 @@ export default function Rondje() {
                         ))}
                     </select>
                     <button
-                        // href="/"
-                        onClick={voerScoresIn}
+                        onClick={voerScoresInNieuw}
                         className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-xl shadow transition"
                     >
                         Terug naar home
