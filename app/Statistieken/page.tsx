@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
-import { supabase } from "../lib/supabaseClient";
 import { User } from "../types/types";
+import "../globals.css";
 
 export default function Statistieken() {
     const [naam, setNaam] = useState("Robin");
@@ -9,42 +9,25 @@ export default function Statistieken() {
     const [gemiddelde, setGemiddelde] = useState<number[]>([]);
 
     useEffect(() => {
-        const fetchUsers = async () => {
-            const { data: User, error } = await supabase
-                .from("User")
-                .select("*");
-            if (error) console.error(error);
-            else {
-                setOpties(User);
-            }
-        };
         fetchUsers();
-        fetchScores(naam);
+        fetchGemiddelde(naam);
     }, []);
-
-    const fetchScores = async (nieuweNaam: string) => {
-        for (let i = 1; i < 5; i++) {
-            let totaal = 0;
-            let tijdelijkGemiddelde = 0;
-            const { data: rondjeScore, error } = await supabase
-                .from("rondjeUitgebreid")
-                .select(String(i))
-                .eq("userName", nieuweNaam);
-            if (error) console.error(error);
-            else {
-                console.log(rondjeScore);
-                for (const waarde in rondjeScore) {
-                    if (Number(waarde) !== 0 && waarde !== null)
-                        console.log(totaal, "waarde:", Number(waarde));
-                    totaal += Number(waarde);
-                }
-                console.log(totaal);
-                tijdelijkGemiddelde = totaal / rondjeScore.length;
-                console.log(tijdelijkGemiddelde);
-
-                setGemiddelde((x) => [...x, tijdelijkGemiddelde]);
-            }
-        }
+    const fetchUsers = async () => {
+        fetch(
+            "https://juicedartsbackend-production.up.railway.app/User/alleUsers"
+        )
+            .then((res) => res.json())
+            .then((data) => setOpties(data));
+    };
+    const fetchGemiddelde = async (naam: string) => {
+        fetch(
+            `https://juicedartsbackend-production.up.railway.app/Rondje/getGemiddelde?name=${naam}`
+        )
+            .then((res) => res.json())
+            .then((data) => {
+                setGemiddelde(data);
+                console.log(data);
+            });
     };
 
     return (
@@ -56,7 +39,7 @@ export default function Statistieken() {
                     value={naam}
                     onChange={(e) => {
                         setNaam(e.target.value);
-                        fetchScores(e.target.value);
+                        fetchGemiddelde(e.target.value);
                     }}
                     className="dropdown"
                 >
@@ -72,20 +55,15 @@ export default function Statistieken() {
                     <tr>
                         <th className="cellStyle">Getal</th>
                         <th className="cellStyle">Gemiddeld</th>
-                        <th className="cellStyle">Beste</th>
+                        {/* <th className="cellStyle">Beste</th> */}
                     </tr>
                 </thead>
                 <tbody>
-                    {gemiddelde.map((gemiddelde, index) => (
-                        <tr className="block" key={index}>
-                            <td className="cellStyle">{index}</td>
-                            <td className="cellStyle">{gemiddelde}</td>
+                    {gemiddelde.map((waarde, index) => (
+                        <tr key={index}>
+                            <td className="cellStyle">{index + 1}</td>
+                            <td className="cellStyle">{waarde.toFixed(1)}</td>
                         </tr>
-                        // <tr key={score.Id}>
-                        //     <td className="cellStyle">{score.userName}</td>
-                        //     <td className="cellStyle">{score.eersteTwintig}</td>
-                        //     <td className="cellStyle">{score.totaal}</td>
-                        // </tr>
                     ))}
                 </tbody>
             </table>
