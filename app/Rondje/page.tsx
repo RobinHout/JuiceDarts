@@ -13,6 +13,7 @@ export default function Rondje() {
     const [bull, setBull] = useState(false);
     const [max, setMax] = useState(false);
     const [naam, setNaam] = useState("Robin");
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -128,7 +129,11 @@ export default function Rondje() {
                         ))}
                     </select>
                     <button
-                        onClick={voerScoresInNieuw}
+                        onClick={() => {
+                            voerScoresInNieuw();
+                            setLoading(true);
+                        }}
+                        disabled={loading}
                         className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-xl shadow transition"
                     >
                         Terug naar home
