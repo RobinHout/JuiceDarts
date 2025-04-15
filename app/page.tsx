@@ -88,13 +88,17 @@ export default function Home() {
                     </tr>
                 </thead>
                 <tbody>
-                    {scores.map((score) => (
-                        <tr key={score.gameId}>
-                            <td className="cellStyle">{score.userName}</td>
-                            <td className="cellStyle">{score.eersteTwintig}</td>
-                            <td className="cellStyle">{score.totaal}</td>
-                        </tr>
-                    ))}
+                    {[...scores]
+                        .sort((a, b) => b.gameId - a.gameId) // sorteer op gameId, aflopend
+                        .map((score) => (
+                            <tr key={score.gameId}>
+                                <td className="cellStyle">{score.userName}</td>
+                                <td className="cellStyle">
+                                    {score.eersteTwintig}
+                                </td>
+                                <td className="cellStyle">{score.totaal}</td>
+                            </tr>
+                        ))}
                 </tbody>
             </table>
         </>

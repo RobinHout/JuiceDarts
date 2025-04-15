@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { rondjeScore } from "../types/types";
 import { User } from "../types/types";
+import Popup from "../lib/popup";
 
 export default function Rondje() {
     const [naam, setNaam] = useState("");
@@ -163,6 +164,7 @@ export default function Rondje() {
                     </tbody>
                 </table>
             </div>
+            <Popup />
         </div>
     );
 }
