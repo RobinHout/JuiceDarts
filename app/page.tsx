@@ -90,7 +90,6 @@ export default function Home() {
             <div className="flex justify-center mt-10">
                 <table className="tabel">
                     <thead>
-                        <h1>Beste van de week</h1>
                         <tr>
                             <th className="cellStyle">Wie</th>
                             <th className="cellStyle">Eerste 20</th>
@@ -115,7 +114,6 @@ export default function Home() {
                 </table>
                 <table className="tabel">
                     <thead>
-                        <h1>Scores</h1>
                         <tr>
                             <th className="cellStyle">Wie</th>
                             <th className="cellStyle">Eerste 20</th>
