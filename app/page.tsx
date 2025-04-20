@@ -87,8 +87,8 @@ export default function Home() {
                     </Link>
                 </div>
             </div>
-            <div className="flex justify-center mt-10">
-                <table className="tabel">
+            <div className="flex flex-col lg:flex-row justify-center mt-10 gap-4">
+                <table className="tabel w-full lg:w-1/2">
                     <thead>
                         <tr>
                             <th className="cellStyle">Wie</th>
@@ -112,7 +112,7 @@ export default function Home() {
                         ))}
                     </tbody>
                 </table>
-                <table className="tabel">
+                <table className="tabel w-full lg:w-1/2">
                     <thead>
                         <tr>
                             <th className="cellStyle">Wie</th>
