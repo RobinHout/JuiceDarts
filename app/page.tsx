@@ -18,9 +18,11 @@ const honderdtachtigs: honderdtachtig[] = [
 ];
 export default function Home() {
     const [scores, setScores] = useState<rondjeScore[]>([]);
+    const [week, setWeek] = useState<rondjeScore[]>([]);
 
     useEffect(() => {
         fetchScoresNieuw();
+        fetchWeekscores();
     }, []);
 
     const fetchScoresNieuw = async () => {
@@ -30,7 +32,13 @@ export default function Home() {
             .then((res) => res.json())
             .then((data) => setScores(data));
     };
-
+    const fetchWeekscores = async () => {
+        fetch(
+            "https://juicedartsbackend-production.up.railway.app/Rondje/getRondjesWeek"
+        )
+            .then((res) => res.json())
+            .then((data) => setWeek(data));
+    };
     return (
         <>
             <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
@@ -79,28 +87,60 @@ export default function Home() {
                     </Link>
                 </div>
             </div>
-            <table className="tabel">
-                <thead>
-                    <tr>
-                        <th className="cellStyle">Wie</th>
-                        <th className="cellStyle">Eerste 20</th>
-                        <th className="cellStyle">Totaal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {[...scores]
-                        .sort((a, b) => b.gameId - a.gameId) // sorteer op gameId, aflopend
-                        .map((score) => (
-                            <tr key={score.gameId}>
-                                <td className="cellStyle">{score.userName}</td>
+            <div className="flex justify-center mt-10">
+                <table className="tabel">
+                    <thead>
+                        <h1>Beste van de week</h1>
+                        <tr>
+                            <th className="cellStyle">Wie</th>
+                            <th className="cellStyle">Eerste 20</th>
+                            <th className="cellStyle">Totaal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {week.map((weekscore) => (
+                            <tr key={weekscore.gameId}>
                                 <td className="cellStyle">
-                                    {score.eersteTwintig}
+                                    {weekscore.userName}
                                 </td>
-                                <td className="cellStyle">{score.totaal}</td>
+                                <td className="cellStyle">
+                                    {weekscore.eersteTwintig}
+                                </td>
+                                <td className="cellStyle">
+                                    {weekscore.totaal}
+                                </td>
                             </tr>
                         ))}
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+                <table className="tabel">
+                    <thead>
+                        <h1>Scores</h1>
+                        <tr>
+                            <th className="cellStyle">Wie</th>
+                            <th className="cellStyle">Eerste 20</th>
+                            <th className="cellStyle">Totaal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[...scores]
+                            .sort((a, b) => b.gameId - a.gameId) // sorteer op gameId, aflopend
+                            .map((score) => (
+                                <tr key={score.gameId}>
+                                    <td className="cellStyle">
+                                        {score.userName}
+                                    </td>
+                                    <td className="cellStyle">
+                                        {score.eersteTwintig}
+                                    </td>
+                                    <td className="cellStyle">
+                                        {score.totaal}
+                                    </td>
+                                </tr>
+                            ))}
+                    </tbody>
+                </table>
+            </div>
         </>
     );
 }
