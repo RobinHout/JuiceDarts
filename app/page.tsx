@@ -88,50 +88,67 @@ export default function Home() {
                 </div>
             </div>
             <div className="flex flex-col lg:flex-row justify-center mt-10 gap-4">
-                <table className="tabel w-full lg:w-1/2">
-                    <thead>
-                        <tr>
-                            <th className="cellStyle">Wie</th>
-                            <th className="cellStyle">Eerste 20</th>
-                            <th className="cellStyle">Totaal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {week.map((weekscore) => (
-                            <tr key={weekscore.gameId}>
-                                <td className="cellStyle">
-                                    {weekscore.userName}
-                                </td>
-                                <td className="cellStyle">
-                                    {weekscore.eersteTwintig}
-                                </td>
-                                <td className="cellStyle">
-                                    {weekscore.totaal}
-                                </td>
+                <div className="w-full lg:w-1/2">
+                    <h2 className="text-xl font-semibold mb-2 text-center">
+                        🏆 Top 10 van de week
+                    </h2>
+
+                    <table className="tabel w-full">
+                        <thead>
+                            <tr>
+                                <th className="cellStyle">Wie</th>
+                                <th className="cellStyle">Eerste 20</th>
+                                <th className="cellStyle">Totaal</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-                <table className="tabel w-full lg:w-1/2">
-                    <thead>
-                        <tr>
-                            <th className="cellStyle">Wie</th>
-                            <th className="cellStyle">Eerste 20</th>
-                            <th className="cellStyle">Totaal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {scores.map((score) => (
-                            <tr key={score.gameId}>
-                                <td className="cellStyle">{score.userName}</td>
-                                <td className="cellStyle">
-                                    {score.eersteTwintig}
-                                </td>
-                                <td className="cellStyle">{score.totaal}</td>
+                        </thead>
+                        <tbody>
+                            {week.map((weekscore) => (
+                                <tr key={weekscore.gameId}>
+                                    <td className="cellStyle">
+                                        {weekscore.userName}
+                                    </td>
+                                    <td className="cellStyle">
+                                        {weekscore.eersteTwintig}
+                                    </td>
+                                    <td className="cellStyle">
+                                        {weekscore.totaal}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div className="w-full lg:w-1/2">
+                    <h2 className="text-xl font-semibold mb-2 text-center">
+                        Laatste scores
+                    </h2>
+
+                    <table className="tabel w-full">
+                        <thead>
+                            <tr>
+                                <th className="cellStyle">Wie</th>
+                                <th className="cellStyle">Eerste 20</th>
+                                <th className="cellStyle">Totaal</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {scores.map((score) => (
+                                <tr key={score.gameId}>
+                                    <td className="cellStyle">
+                                        {score.userName}
+                                    </td>
+                                    <td className="cellStyle">
+                                        {score.eersteTwintig}
+                                    </td>
+                                    <td className="cellStyle">
+                                        {score.totaal}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </>
     );
