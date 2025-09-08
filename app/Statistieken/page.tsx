@@ -69,9 +69,9 @@ export default function Page() {
                     : rows
                           .map(
                               (r) =>
-                                  `${r.User}\t${r.Twintig}\t${r.Totaal}\t${
-                                      r.Date ?? ""
-                                  }`
+                                  `${r.UserName}\t${r.EersteTwintig}\t${
+                                      r.Totaal
+                                  }\t${r.date ?? ""}`
                           )
                           .join("\n")}
             </pre>
