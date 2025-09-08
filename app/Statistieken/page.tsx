@@ -1,72 +1,80 @@
 "use client";
-import { useState, useEffect } from "react";
-import { User } from "../types/types";
-import "../globals.css";
+import { useState } from "react";
+import { Score } from "../types/types";
 
-export default function Statistieken() {
-    const [naam, setNaam] = useState("Robin");
-    const [opties, setOpties] = useState<User[]>([]);
-    const [gemiddelde, setGemiddelde] = useState<number[]>([]);
+export default function Page() {
+    const [form, setForm] = useState({ User: "", Twintig: "", Totaal: "" });
+    const [rows, setRows] = useState<Score[]>([]);
 
-    useEffect(() => {
-        fetchUsers();
-        fetchGemiddelde(naam);
-    }, []);
-    const fetchUsers = async () => {
-        fetch(
-            "https://juicedartsbackend-production.up.railway.app/User/alleUsers"
-        )
-            .then((res) => res.json())
-            .then((data) => setOpties(data));
-    };
-    const fetchGemiddelde = async (naam: string) => {
-        fetch(
-            `https://juicedartsbackend-production.up.railway.app/Rondje/getGemiddelde?name=${naam}`
-        )
-            .then((res) => res.json())
-            .then((data) => {
-                setGemiddelde(data);
-                console.log(data);
-            });
-    };
+    async function load() {
+        const res = await fetch("api/data", { cache: "no-store" });
+        setRows(await res.json());
+    }
+
+    async function submit(e: React.FormEvent) {
+        e.preventDefault();
+        await fetch("api/data", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(form),
+        });
+        setForm({ User: "", Twintig: "", Totaal: "" });
+        await load();
+    }
 
     return (
-        <>
-            {" "}
-            <div className="flex justify-center mt-5">
-                <select
-                    name="naam"
-                    value={naam}
-                    onChange={(e) => {
-                        setNaam(e.target.value);
-                        fetchGemiddelde(e.target.value);
-                    }}
-                    className="dropdown"
+        <main className="p-6 max-w-xl mx-auto space-y-6">
+            <h1 className="text-2xl font-bold">CSV Demo</h1>
+
+            <form onSubmit={submit} className="space-y-3">
+                <input
+                    className="border rounded p-2 w-full"
+                    placeholder="User"
+                    value={form.User}
+                    onChange={(e) =>
+                        setForm((s) => ({ ...s, User: e.target.value }))
+                    }
+                />
+                <input
+                    className="border rounded p-2 w-full"
+                    placeholder="Twintig"
+                    value={form.Twintig}
+                    onChange={(e) =>
+                        setForm((s) => ({ ...s, Twintig: e.target.value }))
+                    }
+                />
+                <input
+                    className="border rounded p-2 w-full"
+                    placeholder="Totaal"
+                    value={form.Totaal}
+                    onChange={(e) =>
+                        setForm((s) => ({ ...s, Totaal: e.target.value }))
+                    }
+                />
+                <button className="border rounded px-4 py-2" type="submit">
+                    Add Row
+                </button>
+                <button
+                    className="border rounded px-4 py-2 ml-2"
+                    type="button"
+                    onClick={load}
                 >
-                    {opties.map((optie) => (
-                        <option key={optie.id} value={optie.userName}>
-                            {optie.userName}
-                        </option>
-                    ))}
-                </select>
-            </div>
-            <table className="tabel">
-                <thead>
-                    <tr>
-                        <th className="cellStyle">Getal</th>
-                        <th className="cellStyle">Gemiddeld</th>
-                        {/* <th className="cellStyle">Beste</th> */}
-                    </tr>
-                </thead>
-                <tbody>
-                    {gemiddelde.map((waarde, index) => (
-                        <tr key={index}>
-                            <td className="cellStyle">{index + 1}</td>
-                            <td className="cellStyle">{waarde.toFixed(1)}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </>
+                    Load CSV
+                </button>
+            </form>
+
+            <pre className="bg-gray-100 p-3 rounded overflow-auto text-sm">
+                {rows.length === 0
+                    ? "No rows yet."
+                    : rows
+                          .map(
+                              (r) =>
+                                  `${r.User}\t${r.Twintig}\t${r.Totaal}\t${
+                                      r.Date ?? ""
+                                  }`
+                          )
+                          .join("\n")}
+            </pre>
+        </main>
     );
 }

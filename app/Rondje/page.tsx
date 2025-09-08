@@ -1,13 +1,17 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { User } from "../types/types";
+// import { User } from "../types/types";
+import { supabase } from "../lib/supabaseClient";
 
 export default function Rondje() {
+    const [eersteTwintig, setEersteTwintig] = useState(0);
+    // const [Totaal, setTotaal] = useState(0);
+
     const [gegooid, setGegooid] = useState(0);
     const [beurt, setBeurt] = useState(1);
     const [klaar, setKlaar] = useState(false);
-    const [opties, setOpties] = useState<User[]>([]);
+    // const [opties, setOpties] = useState<User[]>([]);
     const [scores, setScores] = useState<number[]>([]);
     const [counter, setCounter] = useState(0);
     const [bull, setBull] = useState(false);
@@ -17,15 +21,15 @@ export default function Rondje() {
     const router = useRouter();
 
     useEffect(() => {
-        fetchUsers();
+        // fetchUsers();
     }, []);
-    const fetchUsers = async () => {
-        fetch(
-            "https://juicedartsbackend-production.up.railway.app/User/alleUsers"
-        )
-            .then((res) => res.json())
-            .then((data) => setOpties(data));
-    };
+    // const fetchUsers = async () => {
+    //     fetch(
+    //         "https://juicedartsbackend-production.up.railway.app/User/alleUsers"
+    //     )
+    //         .then((res) => res.json())
+    //         .then((data) => setOpties(data));
+    // };
     function Gemist() {
         setGegooid(gegooid + 1);
     }
@@ -54,6 +58,7 @@ export default function Rondje() {
                     setCounter(nieuwGegooid);
                     setBeurt(21);
                     setBull(true);
+                    setEersteTwintig(nieuwGegooid);
                 } else {
                     const z = nieuwGegooid - counter;
                     setScores((y) => [...y, z]);
@@ -71,24 +76,50 @@ export default function Rondje() {
         }
     }
 
+    // const voerScoresInNieuw = async () => {
+    //     const response = await fetch(
+    //         `https://juicedartsbackend-production.up.railway.app/Rondje/nieuwRondje?name=${naam}`,
+    //         {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify(scores),
+    //         }
+    //     );
+    //     if (response.ok) {
+    //         console.log("Scores succesvol opgeslagen!");
+    //         router.push("/");
+    //     } else {
+    //         console.error("Fout bij opslaan van scores:", response.statusText);
+    //     }
+    // };
     const voerScoresInNieuw = async () => {
-        const response = await fetch(
-            `https://juicedartsbackend-production.up.railway.app/Rondje/nieuwRondje?name=${naam}`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
+        const { error } = await supabase
+            .from("Rondje")
+            .insert([
+                {
+                    UserName: naam,
+                    EersteTwintig: eersteTwintig,
+                    Totaal: gegooid,
                 },
-                body: JSON.stringify(scores),
-            }
-        );
-        if (response.ok) {
+            ])
+            .select();
+        if (error) {
+            console.error("Fout bij opslaan van scores:", error.message);
+        } else {
             console.log("Scores succesvol opgeslagen!");
             router.push("/");
-        } else {
-            console.error("Fout bij opslaan van scores:", response.statusText);
         }
     };
+    // const fetchUsers = async () => {
+    //     const { data: User, error } = await supabase.from("User").select("*");
+    //     if (error) console.error(error + "Dit is de supabase error");
+    //     else {
+    //         setOpties(User);
+    //     }
+    // };
+
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
             <h1 className="text-3xl font-bold mb-6 text-gray-800">
@@ -116,18 +147,21 @@ export default function Rondje() {
                     <div className="text-lg font-semibold text-green-700">
                         🎯 Je bent klaar!
                     </div>
-                    <select
+                    <label htmlFor="naam" className="sr-only">
+                        UserName
+                    </label>
+                    <input
+                        id="naam"
                         name="naam"
+                        type="text"
                         value={naam}
                         onChange={(e) => setNaam(e.target.value)}
-                        className="dropdown"
-                    >
-                        {opties.map((optie) => (
-                            <option key={optie.userName} value={optie.userName}>
-                                {optie.userName}
-                            </option>
-                        ))}
-                    </select>
+                        onBlur={(e) => setNaam(e.target.value.trim())}
+                        className="input" // eventueel je oude "dropdown"-class laten staan als die styling nodig is
+                        placeholder="Voer je userName in"
+                        autoComplete="off"
+                        spellCheck={false}
+                    />
                     <button
                         onClick={() => {
                             voerScoresInNieuw();

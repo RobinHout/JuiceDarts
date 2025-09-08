@@ -9,3 +9,9 @@ export type rondjeScore = {
     totaal: number;
     date: string;
 };
+export type Score = {
+    UserName: string;
+    EersteTwintig: number;
+    Totaal: number;
+    date: string;
+};

@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import "./globals.css";
 import Link from "next/link";
-import { rondjeScore } from "./types/types";
+import { Score } from "./types/types";
+import { supabase } from "./lib/supabaseClient";
 
 type honderdtachtig = {
     positie: number;
@@ -17,28 +18,49 @@ const honderdtachtigs: honderdtachtig[] = [
     { positie: 2, userName: "Koos", aantal: 1 },
 ];
 export default function Home() {
-    const [scores, setScores] = useState<rondjeScore[]>([]);
-    const [week, setWeek] = useState<rondjeScore[]>([]);
+    // const [scores] = useState<Score[]>([]);
+    const [week, setWeek] = useState<Score[]>([]);
 
     useEffect(() => {
-        fetchScoresNieuw();
+        // fetchScoresNieuw();
         fetchWeekscores();
     }, []);
-
-    const fetchScoresNieuw = async () => {
-        fetch(
-            "https://juicedartsbackend-production.up.railway.app/Rondje/alleRondjes"
-        )
-            .then((res) => res.json())
-            .then((data) => setScores(data));
-    };
     const fetchWeekscores = async () => {
-        fetch(
-            "https://juicedartsbackend-production.up.railway.app/Rondje/getRondjesWeek"
-        )
-            .then((res) => res.json())
-            .then((data) => setWeek(data));
+        const { data: rondjeScore, error } = await supabase
+            .from("Rondje")
+            .select("*");
+        if (error) console.error(error + "Dit is de supabase error");
+        else {
+            setWeek(rondjeScore);
+            console.log("Hallo" + rondjeScore);
+        }
     };
+    // const fetchScoresNieuw = async () => {
+    //     const res = await fetch("api/data", { cache: "no-store" });
+    //     console.log(res.json());
+    //     setScores(await res.json());
+    // };
+    // const fetchWeekscores = async () => {
+    //     const res = await fetch("api/lastSeven", { cache: "no-store" });
+    //     console.log(res.json());
+    //     setWeek(await res.json());
+    // };
+
+    // const fetchScoresNieuw = async () => {
+    //     fetch(
+    //         "https://juicedartsbackend-production.up.railway.app/Rondje/alleRondjes"
+    //     )
+    //         .then((res) => res.json())
+    //         .then((data) => setScores(data));
+    // };
+    // const fetchWeekscores = async () => {
+    //     fetch(
+    //         "https://juicedartsbackend-production.up.railway.app/Rondje/getRondjesWeek"
+    //     )
+    //         .then((res) => res.json())
+    //         .then((data) => setWeek(data));
+    // };
+
     return (
         <>
             <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
@@ -90,7 +112,8 @@ export default function Home() {
             <div className="flex flex-col lg:flex-row justify-center mt-10 gap-4">
                 <div className="w-full lg:w-1/2">
                     <h2 className="text-xl font-semibold mb-2 text-center">
-                        🏆 Top 10 van de week
+                        {/* 🏆 Top 10 van de week */}
+                        Scores
                     </h2>
 
                     <table className="tabel w-full">
@@ -99,19 +122,23 @@ export default function Home() {
                                 <th className="cellStyle">Wie</th>
                                 <th className="cellStyle">Eerste 20</th>
                                 <th className="cellStyle">Totaal</th>
+                                <th className="cellStyle">Datum</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {week.map((weekscore) => (
-                                <tr key={weekscore.gameId}>
+                            {[...week].reverse().map((weekscore) => (
+                                <tr key={weekscore.date}>
                                     <td className="cellStyle">
-                                        {weekscore.userName}
+                                        {weekscore.UserName}
                                     </td>
                                     <td className="cellStyle">
-                                        {weekscore.eersteTwintig}
+                                        {weekscore.EersteTwintig}
                                     </td>
                                     <td className="cellStyle">
-                                        {weekscore.totaal}
+                                        {weekscore.Totaal}
+                                    </td>
+                                    <td className="cellStyle">
+                                        {String(weekscore.date).slice(0, 10)}
                                     </td>
                                 </tr>
                             ))}
@@ -119,7 +146,7 @@ export default function Home() {
                     </table>
                 </div>
 
-                <div className="w-full lg:w-1/2">
+                {/* <div className="w-full lg:w-1/2">
                     <h2 className="text-xl font-semibold mb-2 text-center">
                         Laatste scores
                     </h2>
@@ -130,25 +157,31 @@ export default function Home() {
                                 <th className="cellStyle">Wie</th>
                                 <th className="cellStyle">Eerste 20</th>
                                 <th className="cellStyle">Totaal</th>
+                                <th className="cellStyle">Datum</th>
                             </tr>
                         </thead>
                         <tbody>
                             {scores.map((score) => (
-                                <tr key={score.gameId}>
+                                <tr key={score.Date}>
+                                    <td className="cellStyle">{score.User}</td>
                                     <td className="cellStyle">
-                                        {score.userName}
+                                        {score.Twintig}
                                     </td>
                                     <td className="cellStyle">
-                                        {score.eersteTwintig}
+                                        {score.Totaal}
                                     </td>
                                     <td className="cellStyle">
-                                        {score.totaal}
+                                        {formatInTimeZone(
+                                            score.Date,
+                                            "Europe/Amsterdam",
+                                            "dd-MM HH:mm"
+                                        )}
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
-                </div>
+                </div> */}
             </div>
         </>
     );
