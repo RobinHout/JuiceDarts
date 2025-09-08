@@ -71,6 +71,7 @@ export default function Rondje() {
                         setScores((y) => [...y, 0]);
                     }
                     setBeurt(beurt + x);
+                    setScores(scores);
                 }
             }
         }
