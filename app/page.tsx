@@ -18,48 +18,46 @@ const honderdtachtigs: honderdtachtig[] = [
     { positie: 2, userName: "Koos", aantal: 1 },
 ];
 export default function Home() {
-    // const [scores] = useState<Score[]>([]);
+    const now = new Date();
+    const from = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // last 7 days
+
+    const [scores, setScores] = useState<Score[]>([]);
     const [week, setWeek] = useState<Score[]>([]);
 
     useEffect(() => {
-        // fetchScoresNieuw();
+        fetchScoresNieuw();
         fetchWeekscores();
     }, []);
     const fetchWeekscores = async () => {
-        const { data: rondjeScore, error } = await supabase
+        const { data, error } = await supabase
             .from("Rondje")
-            .select("*");
-        if (error) console.error(error + "Dit is de supabase error");
+            .select("*")
+            .order("date", { ascending: false })
+            .limit(10);
+        if (error)
+            console.error(
+                error + "Dit is de supabase error voor FetchWeekscores"
+            );
         else {
-            setWeek(rondjeScore);
-            console.log("Hallo" + rondjeScore);
+            setWeek(data);
         }
     };
-    // const fetchScoresNieuw = async () => {
-    //     const res = await fetch("api/data", { cache: "no-store" });
-    //     console.log(res.json());
-    //     setScores(await res.json());
-    // };
-    // const fetchWeekscores = async () => {
-    //     const res = await fetch("api/lastSeven", { cache: "no-store" });
-    //     console.log(res.json());
-    //     setWeek(await res.json());
-    // };
-
-    // const fetchScoresNieuw = async () => {
-    //     fetch(
-    //         "https://juicedartsbackend-production.up.railway.app/Rondje/alleRondjes"
-    //     )
-    //         .then((res) => res.json())
-    //         .then((data) => setScores(data));
-    // };
-    // const fetchWeekscores = async () => {
-    //     fetch(
-    //         "https://juicedartsbackend-production.up.railway.app/Rondje/getRondjesWeek"
-    //     )
-    //         .then((res) => res.json())
-    //         .then((data) => setWeek(data));
-    // };
+    const fetchScoresNieuw = async () => {
+        const { data, error } = await supabase
+            .from("Rondje")
+            .select("*")
+            .gte("date", from.toISOString())
+            .lte("date", now.toISOString())
+            .order("Totaal", { ascending: true })
+            .limit(10);
+        if (error)
+            console.error(
+                error + "Dit is de supabase error voor FetchScoresNieuw"
+            );
+        else {
+            setScores(data);
+        }
+    };
 
     return (
         <>
@@ -112,8 +110,7 @@ export default function Home() {
             <div className="flex flex-col lg:flex-row justify-center mt-10 gap-4">
                 <div className="w-full lg:w-1/2">
                     <h2 className="text-xl font-semibold mb-2 text-center">
-                        {/* 🏆 Top 10 van de week */}
-                        Scores
+                        Alle Scores
                     </h2>
 
                     <table className="tabel w-full">
@@ -126,19 +123,19 @@ export default function Home() {
                             </tr>
                         </thead>
                         <tbody>
-                            {[...week].reverse().map((weekscore) => (
-                                <tr key={weekscore.date}>
+                            {week.map((laatsteScore) => (
+                                <tr key={laatsteScore.date}>
                                     <td className="cellStyle">
-                                        {weekscore.UserName}
+                                        {laatsteScore.UserName}
                                     </td>
                                     <td className="cellStyle">
-                                        {weekscore.EersteTwintig}
+                                        {laatsteScore.EersteTwintig}
                                     </td>
                                     <td className="cellStyle">
-                                        {weekscore.Totaal}
+                                        {laatsteScore.Totaal}
                                     </td>
                                     <td className="cellStyle">
-                                        {String(weekscore.date).slice(0, 10)}
+                                        {String(laatsteScore.date).slice(5, 10)}
                                     </td>
                                 </tr>
                             ))}
@@ -146,9 +143,9 @@ export default function Home() {
                     </table>
                 </div>
 
-                {/* <div className="w-full lg:w-1/2">
+                <div className="w-full lg:w-1/2">
                     <h2 className="text-xl font-semibold mb-2 text-center">
-                        Laatste scores
+                        🏆 Top 10 van de afgelopen 7 dagen
                     </h2>
 
                     <table className="tabel w-full">
@@ -162,26 +159,24 @@ export default function Home() {
                         </thead>
                         <tbody>
                             {scores.map((score) => (
-                                <tr key={score.Date}>
-                                    <td className="cellStyle">{score.User}</td>
+                                <tr key={score.date}>
                                     <td className="cellStyle">
-                                        {score.Twintig}
+                                        {score.UserName}
+                                    </td>
+                                    <td className="cellStyle">
+                                        {score.EersteTwintig}
                                     </td>
                                     <td className="cellStyle">
                                         {score.Totaal}
                                     </td>
                                     <td className="cellStyle">
-                                        {formatInTimeZone(
-                                            score.Date,
-                                            "Europe/Amsterdam",
-                                            "dd-MM HH:mm"
-                                        )}
+                                        {String(score.date).slice(5, 10)}
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
-                </div> */}
+                </div>
             </div>
         </>
     );
