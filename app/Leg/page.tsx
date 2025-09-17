@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabaseClient";
-
 import { useState } from "react";
 
 const users = [

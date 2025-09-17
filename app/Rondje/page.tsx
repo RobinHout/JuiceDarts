@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabaseClient";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 // import { User } from "../types/types";
 
 export default function Rondje() {
@@ -20,9 +20,9 @@ export default function Rondje() {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
-    useEffect(() => {
-        // fetchUsers();
-    }, []);
+    // useEffect(() => {
+    //     // fetchUsers();
+    // }, []);
     // const fetchUsers = async () => {
     //     fetch(
     //         "https://juicedartsbackend-production.up.railway.app/User/alleUsers"

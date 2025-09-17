@@ -26,9 +26,9 @@ export default function Home() {
     const [legScores, setLegScores] = useState<Leg[]>([]);
 
     useEffect(() => {
-        fetchScoresNieuw();
         fetchWeekscores();
         fetchLegScores();
+        fetchScoresNieuw();
     }, []);
 
     const fetchWeekscores = async () => {
