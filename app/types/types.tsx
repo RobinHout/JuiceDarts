@@ -15,3 +15,9 @@ export type Score = {
     Totaal: number;
     date: string;
 };
+export type Leg = {
+    User: string;
+    TotHonderd: number;
+    Totaal: number;
+    date: string;
+};

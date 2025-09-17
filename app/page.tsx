@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import "./globals.css";
 import Link from "next/link";
-import { Score } from "./types/types";
+import { Score, Leg } from "./types/types";
 import { supabase } from "./lib/supabaseClient";
 
 type honderdtachtig = {
@@ -23,11 +23,14 @@ export default function Home() {
 
     const [scores, setScores] = useState<Score[]>([]);
     const [week, setWeek] = useState<Score[]>([]);
+    const [legScores, setLegScores] = useState<Leg[]>([]);
 
     useEffect(() => {
         fetchScoresNieuw();
         fetchWeekscores();
+        fetchLegScores();
     }, []);
+
     const fetchWeekscores = async () => {
         const { data, error } = await supabase
             .from("Rondje")
@@ -42,6 +45,18 @@ export default function Home() {
             setWeek(data);
         }
     };
+
+    const fetchLegScores = async () => {
+        const { data, error } = await supabase.from("Leg").select("*");
+        if (error)
+            console.error(
+                error + "Dit is de supabase error voor FetchLegScores"
+            );
+        else {
+            setLegScores(data);
+        }
+    };
+
     const fetchScoresNieuw = async () => {
         const { data, error } = await supabase
             .from("Rondje")
@@ -95,19 +110,49 @@ export default function Home() {
                         href={{ pathname: "/Rondje" }}
                         className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-2xl shadow-md transition duration-200"
                     >
-                        Nieuw spel
+                        Nieuw Rondje
                     </Link>
                 </div>
                 <div className="flex justify-center mt-6">
                     <Link
-                        href={{ pathname: "/Statistieken" }}
+                        href={{ pathname: "/Leg" }}
                         className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-2xl shadow-md transition duration-200"
                     >
-                        Statistieken
+                        Nieuwe Leg
                     </Link>
                 </div>
             </div>
             <div className="flex flex-col lg:flex-row justify-center mt-10 gap-4">
+                <div className="w-full lg:w-1/2">
+                    <h2 className="text-xl font-semibold mb-2 text-center">
+                        Alle Scores
+                    </h2>
+
+                    <table className="tabel w-full">
+                        <thead>
+                            <tr>
+                                <th className="cellStyle">Wie</th>
+                                <th className="cellStyle">Tot Honderd</th>
+                                <th className="cellStyle">Totaal</th>
+                                <th className="cellStyle">Datum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {legScores.map((leg) => (
+                                <tr key={leg.date}>
+                                    <td className="cellStyle">{leg.User}</td>
+                                    <td className="cellStyle">
+                                        {leg.TotHonderd}
+                                    </td>
+                                    <td className="cellStyle">{leg.Totaal}</td>
+                                    <td className="cellStyle">
+                                        {String(leg.date).slice(5, 10)}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
                 <div className="w-full lg:w-1/2">
                     <h2 className="text-xl font-semibold mb-2 text-center">
                         Alle Scores

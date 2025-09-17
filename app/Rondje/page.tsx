@@ -1,8 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { supabase } from "../lib/supabaseClient";
 import { useState, useEffect } from "react";
 // import { User } from "../types/types";
-import { supabase } from "../lib/supabaseClient";
 
 export default function Rondje() {
     const [eersteTwintig, setEersteTwintig] = useState(0);
@@ -16,7 +16,7 @@ export default function Rondje() {
     const [counter, setCounter] = useState(0);
     const [bull, setBull] = useState(false);
     const [max, setMax] = useState(false);
-    const [naam, setNaam] = useState("Robin");
+    const [naam, setNaam] = useState("Robin"); // User gaat weg -------------------
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
