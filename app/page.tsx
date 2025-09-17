@@ -125,7 +125,7 @@ export default function Home() {
             <div className="flex flex-col lg:flex-row justify-center mt-10 gap-4">
                 <div className="w-full lg:w-1/2">
                     <h2 className="text-xl font-semibold mb-2 text-center">
-                        Alle Scores
+                        Alle Gegooide Legs
                     </h2>
 
                     <table className="tabel w-full">
@@ -155,7 +155,7 @@ export default function Home() {
                 </div>
                 <div className="w-full lg:w-1/2">
                     <h2 className="text-xl font-semibold mb-2 text-center">
-                        Alle Scores
+                        Alle Gegooide Rondjes
                     </h2>
 
                     <table className="tabel w-full">
@@ -190,7 +190,7 @@ export default function Home() {
 
                 <div className="w-full lg:w-1/2">
                     <h2 className="text-xl font-semibold mb-2 text-center">
-                        🏆 Top 10 van de afgelopen 7 dagen
+                        🏆 Top 10 Rondjes van de Afgelopen 7 Dagen
                     </h2>
 
                     <table className="tabel w-full">
