@@ -78,3 +78,6 @@
 //         </main>
 //     );
 // }
+export default function Page() {
+    return <div>Deze pagina wordt niet gebruikt</div>;
+}
