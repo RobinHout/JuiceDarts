@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabaseClient";
 import { useState } from "react";
+import { CHECKOUTS, CHECKOUTS_2DART } from "../lib/darts_checkouts_easy";
 
 const users = [
     { id: "1", name: "Robin" },
@@ -20,11 +21,16 @@ export default function Leg() {
     const [multiplier, setMultiplier] = useState<1 | 2 | 3>(1);
     const [finish, setFinish] = useState(false);
     const [selectedUser, setSelectedUser] = useState(""); //user gaat weg
+    const [pBeurt, setPBeurt] = useState(3);
     const numbers = Array.from({ length: 20 }, (_, i) => i + 1);
     const router = useRouter();
 
     function gegooid(x: number) {
         setPijlen(pijlen + 1);
+        setPBeurt(pBeurt - 1);
+        if (pBeurt - 1 === 0) {
+            setPBeurt(3);
+        }
         if (score - x === 0 && multiplier === 2) {
             // Uitgegooid
             setScore(0);
@@ -37,6 +43,18 @@ export default function Leg() {
             setTotHonderd(pijlen + 1);
         }
         setScore(score - x);
+    }
+
+    function finishes(nummer: number) {
+        if (pBeurt === 1) {
+            return;
+        }
+        if (pBeurt === 2) {
+            return CHECKOUTS_2DART[score][nummer];
+        }
+        if (pBeurt === 3) {
+            return CHECKOUTS[score][nummer];
+        }
     }
 
     const klaar = async () => {
@@ -115,6 +133,20 @@ export default function Leg() {
                         <div className="mt-2 text-sm text-gray-600">
                             Gegooide pijlen: {pijlen}
                         </div>
+                        <div className="mt-2 text-sm text-gray-600">
+                            Pijlen over in je beurt: {pBeurt}
+                        </div>
+                        {score < 100 ? (
+                            <div className="mt-2 text-sm text-gray-600">
+                                {finishes(1)}
+                                <br />
+                                {finishes(2)}
+                                <br />
+                                {finishes(3)}
+                            </div>
+                        ) : (
+                            <></>
+                        )}
                     </div>
                     <fieldset className="mb-4" aria-label="Bull">
                         <div
